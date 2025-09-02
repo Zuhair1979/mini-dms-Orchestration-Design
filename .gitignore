@@ -1,5 +1,5 @@
-﻿target/
-.log
+target/
+*.log
 .idea
 *.iml
 Thumbs.db
