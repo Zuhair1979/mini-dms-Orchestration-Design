@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: metadata
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dmsdb
+    username: dms
+    password: dms123
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  profiles:
+    active: dev
+
+
+
+server:
+  port: 8083
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true     # enable /actuator/shutdown (dev only)
+  info:
+    env:
+      enabled: true     # exposes env info under /actuator/info (dev only)
+
+
+logging:
+  level:
+    root: INFO          # keep global level at INFO
+    org.springframework.web: DEBUG
+    org.springframework.http.converter: DEBUG
+    org.springframework.validation: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    feign.Logger: DEBUG
+    com.orchestration.metadata: DEBUG   # <== your own package
+    org.springframework.cloud.gateway.filter.factory.CircuitBreakerGatewayFilterFactory: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG

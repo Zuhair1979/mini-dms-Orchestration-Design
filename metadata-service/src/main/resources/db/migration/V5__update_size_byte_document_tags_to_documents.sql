@@ -1,0 +1,2 @@
+ALTER TABLE documents
+  ALTER COLUMN size_byte TYPE BIGINT;

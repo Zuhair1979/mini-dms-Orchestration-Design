@@ -1,0 +1,53 @@
+
+spring:
+  application:
+    name: "storage"
+
+server:
+  port: 8082
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka
+
+
+# actuator end point
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+# MinIo connections
+storage:
+  minio:
+    endpoint: http://localhost:9000
+    accessKey: minio
+    secretKey: minio123
+    bucket: dms-files
+    secure: false
+
+
+
+logging:
+  level:
+    root: INFO          # keep global level at INFO
+    org.springframework.web: DEBUG
+    org.springframework.http.converter: DEBUG
+    org.springframework.validation: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    feign.Logger: DEBUG
+    com.orchestration.metadata: DEBUG   # <== your own package

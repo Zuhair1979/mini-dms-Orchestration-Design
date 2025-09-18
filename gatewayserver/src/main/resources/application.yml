@@ -1,0 +1,101 @@
+
+spring:
+  application:
+    name: "gateway"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/dms
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 30s
+  data:
+    redis:
+      host: localhost
+      port: 6379
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+
+#Resilience Properties
+#Circuit Breaker
+resilience4j:
+  timelimiter:
+    instances:
+      metadataCB:
+        timeoutDuration: 3s            # > 1.5s
+        cancelRunningFuture: true
+      searchCB:
+        timeoutDuration: 3s
+        cancelRunningFuture: true
+      storageCB:
+        timeoutDuration: 20s
+        cancelRunningFuture: true
+  circuitbreaker:
+    instances:
+      metadataCB:
+        slidingWindowType: COUNT_BASED # evaluate last N calls
+        slidingWindowSize: 10          # N = 10 calls
+        minimumNumberOfCalls: 10      # only evaluate once 10 calls observed
+        failureRateThreshold: 50      # open when ≥50% failed in the window
+        waitDurationInOpenState: 5s   # stay OPEN for 5s before HALF_OPEN
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+      searchCB:
+        slidingWindowType: COUNT_BASED # evaluate last N calls
+        slidingWindowSize: 10          # N = 10 calls
+        minimumNumberOfCalls: 10      # only evaluate once 10 calls observed
+        failureRateThreshold: 50      # open when ≥50% failed in the window
+        waitDurationInOpenState: 5s   # stay OPEN for 5s before HALF_OPEN
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      storageCB:
+        slidingWindowType: COUNT_BASED # evaluate last N calls
+        slidingWindowSize: 20          # N = 10 calls
+        minimumNumberOfCalls: 15      # only evaluate once 10 calls observed
+        failureRateThreshold: 50      # open when ≥50% failed in the window
+        waitDurationInOpenState: 10s   # stay OPEN for 5s before HALF_OPEN
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+
+
+
+server:
+  port: 8090
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway,loggers
+  endpoint:
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway.filter.factory.CircuitBreakerGatewayFilterFactory: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
+    org.springframework.cloud.gateway.filter.retry: DEBUG
+    org.springframework.cloud.gateway.filter.ratelimit: DEBUG

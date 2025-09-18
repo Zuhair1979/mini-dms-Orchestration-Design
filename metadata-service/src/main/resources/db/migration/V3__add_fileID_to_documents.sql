@@ -1,0 +1,1 @@
+ alter table documents  add column  fileId VARCHAR(255);
