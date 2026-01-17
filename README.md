@@ -9,9 +9,9 @@ The focus of this repository is on the **Orchestration Design Pattern**: one ser
 
 ## 1. Project Goals
 
-This project is designed as a practical playground to:
+This project is designed as a practical design to:
 
-- Practice **microservice architecture** with Java & Spring.
+- demonestrate **microservice architecture** with Java & Spring.
 - Demonstrate the **orchestration** approach for cross-service workflows.
 - Explore **service discovery, API gateway, and centralized auth**.
 - Integrate **infrastructure components** like message brokers, storage, and monitoring.
